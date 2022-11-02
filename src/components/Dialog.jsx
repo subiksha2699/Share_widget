@@ -7,6 +7,12 @@ export default function Dialog(props) {
     let userscopes = ["WRITE", "WRITENOSHARE", "READNCOMMENT", "READ"];
     let shareLinkPermission = ["EDIT", "COMMENT", "DUPTEMP", "SEARCH"];
 
+    //necessary props to generate notionshare component are userScopes,addUserEnable,webLink,defScope,shareLinkPermission
+    //sample values of these props are given above
+    //notion share component can be reused anywhere else with the given props
+    //here I am loading the notionsshare component in a popup, in the same way it can added in any other component
+    //Here Im a using a Custom Inpu which again can be reused like NotionShare component
+    
     return (
         <div>
             <Popover

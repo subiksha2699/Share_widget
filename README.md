@@ -1,6 +1,10 @@
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Idea to create reusable notion share
+
+I have considered the possible data that could change in different use cases and used these as props.\
+Also css and classes can be added to the list of props.\
 
 ## Available Scripts
 
