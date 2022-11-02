@@ -37,7 +37,8 @@ const NotionShare = (props) => {
     const [scopeDescList, setscopeDescList] = React.useState([]);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [selectedUser, setselectedUser] = React.useState(0);
-    debugger;
+    const [sharePermission, setSharePermission] = React.useState([]);
+
     const defaultPermissionforUsers = function () {
         let defPerm = ""
         switch (props.defScope) {
@@ -60,7 +61,7 @@ const NotionShare = (props) => {
     useEffect(() => {
         let input = document.getElementById("idemailInput");
         input.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
+            if (event.key === "Enter" && props.addUserEnable) {
                 event.preventDefault();
                 // Trigger the button element with a click
                 document.getElementById("idInviteBtn").click();
@@ -90,6 +91,32 @@ const NotionShare = (props) => {
                 return selectedScope;
             })
             setscopeDescList(scopeList);
+
+            if (props.shareLinkPermission.length > 0) {
+                let permissionList = props.shareLinkPermission.map((item) => {
+                    let selectedItem = {};
+                    switch (item) {
+                        case "EDIT":
+                            selectedItem["description"] = "Allow Editing";
+                            selectedItem["id"] = "EDIT";
+                            break;
+                        case "COMMENT":
+                            selectedItem["description"] = "Allow Comments";
+                            selectedItem["id"] = "COMMENT";
+                            break;
+                        case "DUPTEMP":
+                            selectedItem["description"] = "Allow duplicate as templates";
+                            selectedItem["id"] = "DUPTEMP";
+                            break;
+                        case "SEARCH":
+                            selectedItem["description"] = "Search engine indexing";
+                            selectedItem["id"] = "SEARCH";
+                            break;
+                    }
+                    return selectedItem;
+                })
+                setSharePermission(permissionList);
+            }
         }
     }, [])
 
@@ -100,7 +127,7 @@ const NotionShare = (props) => {
     function addNewUSer() {
         let users = JSON.parse(JSON.stringify(userList));
         if (emailInputValue !== "") {
-            users.push({ emailId: emailInputValue, userType: "guest", defaultPermission: defaultPermissionforUsers() , userPermission: scopeDescList })
+            users.push({ emailId: emailInputValue, userType: "guest", defaultPermission: defaultPermissionforUsers(), userPermission: scopeDescList })
             setemailInputValue("");
             setuserList(users)
         }
@@ -113,7 +140,7 @@ const NotionShare = (props) => {
             <Stack sx={{ width: "400px", padding: "10px" }}>
                 <HBox sx={{ width: "100%", justifyContent: "space-between", alignItems: "center" }}>
                     <CustomInput id="idemailInput" value={emailInputValue} onChange={(oEvent) => setemailInputValue(oEvent.target.value)} />
-                    <Button id="idInviteBtn" disableElevation disableRipple disableFocusRipple variant="contained" size="small" onClick={() => addNewUSer()}>Invite</Button>
+                    <Button id="idInviteBtn" disabled={!props.addUserEnable} disableElevation disableRipple disableFocusRipple variant="contained"  size="small" onClick={() => addNewUSer()}>Invite</Button>
                 </HBox>
                 <Stack sx={{ maxHeight: "7rem", overflow: "overlay" }}>
                     <List>
@@ -173,7 +200,7 @@ const NotionShare = (props) => {
                     <AccordionDetails>
                         <Stack>
                             <HBox justifyContent="space-around" alignItems="center" width="100%">
-                                <CustomInput value="https://" />
+                                <CustomInput value={props.webLink} />
                                 <Button>Copy Link</Button>
                             </HBox>
                             <Accordion expanded={expandedPermissionPanel} onChange={() => setExpandedPermissionPanel(!expandedPermissionPanel)}>
@@ -186,8 +213,21 @@ const NotionShare = (props) => {
                                         <ExpandMoreIcon sx={{ width: "10px", height: "10px" }} />
                                     </HBox>
                                 </AccordionSummary>
-                                <AccordionDetails>
+                                <AccordionDetails sx={{"& .MuiListItem-root" :{
+                                    padding:"0px"
+                                }}}>
+                                    <List>
+                                        {sharePermission.length > 0 &&
+                                            sharePermission.map((item) => (
+                                                <ListItem alignItems="flex-start" secondaryAction={
+                                                    <Switch />
+                                                }>
+                                                    <ListItemText
+                                                        primary={item.description}
+                                                    />
 
+                                                </ListItem>))}
+                                    </List>
                                 </AccordionDetails>
                             </Accordion>
                         </Stack>
