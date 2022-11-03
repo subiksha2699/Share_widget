@@ -4,14 +4,17 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Idea to create reusable notion share
 
 I have considered the possible data that could change in different use cases and used these as props.\
-Also css and classes can be added to the list of props.\
+Also css and classes can be added to the list of props
+
+Here I have considered the scops and permissions for the share link and users can passed as props so that we can control which scopes and permissions are provides in the notion Share component
 
 ## Available Scripts
 
 In the project directory, you can run:
+
 ### `npm install`
 
-Installs the dependencies and node_modules folder will be added.\
+Installs the dependencies and node_modules folder will be added
 
 ### `npm start`
 
